@@ -2,6 +2,14 @@ var express = require("express");
 var users = require("./../inc/users");
 var router = express.Router();
 
+router.use((req, res, next) => {
+  if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
+    res.redirect("/admin/login");
+  } else {
+    next();
+  }
+});
+
 router.get("/", (req, res, next) => {
   res.render("admin/index", {});
 });
@@ -32,6 +40,11 @@ router.post("/login", (req, res, next) => {
         users.render(req, res, err.message || err);
       });
   }
+});
+
+router.get("/logout", (req, res, next) => {
+  delete req.session.user;
+  res.redirect("/admin/login");
 });
 
 router.get("/menus", (req, res, next) => {
