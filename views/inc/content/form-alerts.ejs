@@ -1,0 +1,15 @@
+<% if(typeof error === "object" && error.length>0){ %>
+<div class="alert alert-danger">
+  <% error.forEach(function(err){ %>
+  <p><%= err %></p>
+  <% }); %>
+</div>
+<% } else if(typeof error === 'string' && error){%>
+<div class="alert alert-danger">
+  <%= error %>
+</div>
+<% } %> <% if(typeof success === "string"){ %>
+<div class="alert alert-success">
+  <%= success %>
+</div>
+<% } %>
