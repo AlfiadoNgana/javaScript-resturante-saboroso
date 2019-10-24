@@ -17,14 +17,14 @@
 
         <div class="row">
           <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box" onclick="window.location.href = '/reservations'" style="cursor:pointer">
+            <div class="info-box" onclick="window.location.href = '/admin/reservations'" style="cursor:pointer">
               <span class="info-box-icon bg-aqua">
                 <i class="ion ion-ios-calendar"></i>
               </span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Reservas</span>
-                <span class="info-box-number">90</span>
+                <span class="info-box-number"><%= nrTotal.nrreservations %></span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -32,14 +32,14 @@
           </div>
           <!-- /.col -->
           <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box" onclick="window.location.href = '/contacts'" style="cursor:pointer">
+            <div class="info-box" onclick="window.location.href = '/admin/contacts'" style="cursor:pointer">
               <span class="info-box-icon bg-red">
                 <i class="ion ion-ios-chatboxes"></i>
               </span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Contatos</span>
-                <span class="info-box-number">41</span>
+                <span class="info-box-number"><%= nrTotal.nrcontacts %></span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -51,14 +51,14 @@
           <div class="clearfix visible-sm-block"></div>
 
           <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box" onclick="window.location.href = '/menu'" style="cursor:pointer">
+            <div class="info-box" onclick="window.location.href = '/admin/menu'" style="cursor:pointer">
               <span class="info-box-icon bg-green">
                 <i class="fa fa-cutlery"></i>
               </span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Menu</span>
-                <span class="info-box-number">3</span>
+                <span class="info-box-number"><%= nrTotal.nrmenus %></span>
               </div>
               <!-- /.info-box-content -->
             </div>
@@ -66,14 +66,14 @@
           </div>
           <!-- /.col -->
           <div class="col-md-3 col-sm-6 col-xs-12">
-            <div class="info-box" onclick="window.location.href = '/users'" style="cursor:pointer">
+            <div class="info-box" onclick="window.location.href = '/admin/users'" style="cursor:pointer">
               <span class="info-box-icon bg-yellow">
                 <i class="ion ion-ios-people-outline"></i>
               </span>
 
               <div class="info-box-content">
                 <span class="info-box-text">Usuários</span>
-                <span class="info-box-number">2</span>
+                <span class="info-box-number"><%= nrTotal.nrusers %></span>
               </div>
               <!-- /.info-box-content -->
             </div>
