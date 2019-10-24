@@ -25,7 +25,8 @@ router.use(function(req, res, next){
 
 router.get("/", (req, res, next) => {
   res.render("admin/index", {
-    menus: req.menus
+    menus: req.menus,
+    user: req.session.user
   });
 });
 
@@ -64,32 +65,37 @@ router.get("/logout", (req, res, next) => {
 
 router.get("/menus", (req, res, next) => {
   res.render("admin/menus", {
-    menus: req.menus
+    menus: req.menus,
+    user: req.session.user
   });
 });
 
 router.get("/reservations", (req, res, next) => {
   res.render("admin/reservations", {
     date: {},
-    menus: req.menus
+    menus: req.menus,
+    user: req.session.user
   });
 });
 
 router.get("/users", (req, res, next) => {
   res.render("admin/users", {
-    menus: req.menus
+    menus: req.menus,
+    user: req.session.user
   });
 });
 
 router.get("/contacts", (req, res, next) => {
   res.render("admin/contacts", {
-    menus: req.menus
+    menus: req.menus,
+    user: req.session.user
   });
 });
 
 router.get("/emails", (req, res, next) => {
   res.render("admin/emails", {
-    menus: req.menus
+    menus: req.menus,
+    user: req.session.user
   });
 });
 
