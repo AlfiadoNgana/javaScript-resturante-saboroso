@@ -36,16 +36,19 @@
                 </tr>
               </thead>
               <tbody>
+                <% let numero=1; 
+                data.forEach(dt=>{ %>
                 <tr>
-                  <td>1.</td>
-                  <td><img src="dist/img/boxed-bg.jpg" alt="" style="height: 18px;"></td>
-                  <td>Update software</td>
-                  <td>Diuretics paradis num copo é motivis de denguis.</td>
-                  <td>R$1,99</td>
+                  <td><%= numero %>.</td>
+                  <td><img src="/<%= dt.photo %>" alt="" style="height: 18px;"></td>
+                  <td><%= dt.title %></td>
+                  <td><%= dt.description %></td>
+                  <td>R$<%= dt.price %></td>
                   <td><button type="button" class="btn btn-xs btn-info btn-update" data-toggle="modal" data-target="#modal-update"><i
                         class="fa fa-pencil"></i> Editar</button>&nbsp;<button type="button" class="btn btn-xs btn-danger btn-delete"><i
                         class="fa fa-trash"></i> Excluir</button></td>
                 </tr>
+                <% numero++;}); %>
               </tbody>
             </table>
           </div>
@@ -149,7 +152,7 @@
       method: 'POST',
       body: formCreateData
     }).then(response=> response.json()).then(json=>{
-      console.log(json);
+      window.location.reload();
     });
   });
 

@@ -1,6 +1,7 @@
 var express = require("express");
 var users = require("./../inc/users");
 var admin = require('./../inc/admin');
+var menus = require('./../inc/menus');
 var router = express.Router();
 
 router.use((req, res, next) => {
@@ -68,14 +69,21 @@ router.get("/logout", (req, res, next) => {
 });
 
 router.get("/menus", (req, res, next) => {
+ menus.getMenus().then(data=>{
   res.render("admin/menus", {
     menus: req.menus,
-    user: req.session.user
+    user: req.session.user,
+    data
   });
+ });
 });
 
 router.post('/menus', (req, res, next)=>{
-  res.send(req.body);
+  menus.save(req.fields, req.files).then(results=>{
+    res.send(results);
+  }).catch(err=>{
+
+    res.send(err)});
 });
 
 router.get("/reservations", (req, res, next) => {
