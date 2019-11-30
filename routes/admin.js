@@ -86,6 +86,14 @@ router.post('/menus', (req, res, next)=>{
     res.send(err)});
 });
 
+router.delete('/menus/:id', function(req, res, next){
+  menus.delete(req.params.id).then(results=>{
+    res.send(results);
+  }).catch(err=>{
+    res.send(err);
+  });
+});
+
 router.get("/reservations", (req, res, next) => {
   res.render("admin/reservations", {
     date: {},

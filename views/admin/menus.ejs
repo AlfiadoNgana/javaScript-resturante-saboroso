@@ -151,6 +151,25 @@
   new HcodeFileReader("#modal-update [type=file]", "#modal-update img");
 
 
+  [...document.querySelectorAll('.btn-delete')].forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      let tr = btn.closest('tr');
+      let data = JSON.parse(tr.dataset.row);
+
+      if(confirm(`deseja excluir este menu ${data.title}`)){
+        fetch(`/admin/menus/${data.id}`, {
+          method: 'DELETE'
+        })
+          .then(response=>response.json())
+          .then(json=>{
+            console.log(json);
+            window.location.reload();
+          });
+      }
+
+    });
+  });
+
   let formCreate = document.querySelector('#modal-create form');
   formCreate.save().then(json=>{
     window.location.reload();
