@@ -2,6 +2,7 @@ var express = require("express");
 var users = require("./../inc/users");
 var admin = require('./../inc/admin');
 var menus = require('./../inc/menus');
+var reservations = require('./../inc/reservations');
 var router = express.Router();
 
 router.use((req, res, next) => {
@@ -95,16 +96,38 @@ router.delete('/menus/:id', function(req, res, next){
 });
 
 router.get("/reservations", (req, res, next) => {
-  res.render("admin/reservations", {
-    date: {},
-    menus: req.menus,
-    user: req.session.user
+  reservations.getReservations().then(data=>{
+    res.render("admin/reservations", {
+      date:{},
+      menus: req.menus,
+      user: req.session.user,
+      data
+    });
+  });
+  
+});
+router.post('/reservations', (req, res, next)=>{
+  reservations.save(req.fields, req.files).then(results=>{
+    res.send(results);
+  }).catch(err=>{
+
+    res.send(err)});
+});
+
+router.delete('/reservations/:id', function(req, res, next){
+  reservations.delete(req.params.id).then(results=>{
+    res.send(results);
+  }).catch(err=>{
+    res.send(err);
   });
 });
+
+
 
 router.get("/users", (req, res, next) => {
   res.render("admin/users", {
     menus: req.menus,
+
     user: req.session.user
   });
 });
