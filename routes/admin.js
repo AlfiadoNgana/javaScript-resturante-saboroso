@@ -2,8 +2,11 @@ var express = require("express");
 var users = require("./../inc/users");
 var admin = require('./../inc/admin');
 var menus = require('./../inc/menus');
+var moment = require('moment');
 var reservations = require('./../inc/reservations');
 var router = express.Router();
+
+moment.locale("pt-br");
 
 router.use((req, res, next) => {
   if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
@@ -101,7 +104,8 @@ router.get("/reservations", (req, res, next) => {
       date:{},
       menus: req.menus,
       user: req.session.user,
-      data
+      data,
+      moment
     });
   });
   
