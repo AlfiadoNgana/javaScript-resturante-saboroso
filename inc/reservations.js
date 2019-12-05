@@ -40,9 +40,9 @@ module.exports = {
                         people=?,
                         date=?,
                         time=?
-                    WHRE id=?
+                    WHERE id=?
                 `;
-                params.push(fields.id);
+                params.push(parseInt(fields.id));
             }else{
                 query = `
                     INSERT INTO tb_reservations(name, email, people, date, time)
