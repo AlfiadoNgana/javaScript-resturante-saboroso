@@ -206,6 +206,24 @@
 
 <script>
 
+[...document.querySelectorAll('.btn-delete')].forEach(btn=>{
+    btn.addEventListener('click', e=>{
+      let tr = btn.closest('tr');
+      let data = JSON.parse(tr.dataset.row);
+
+      if(confirm(`deseja excluir esta reserva ${data.name}`)){
+        fetch(`/admin/reservations/${data.id}`, {
+          method: 'DELETE'
+        })
+          .then(response=>response.json())
+          .then(json=>{
+            window.location.reload();
+          });
+      }
+
+    });
+  });
+
   let formCreate = document.querySelector('#modal-create form');
   formCreate.save().then(json=>{
     window.location.reload();
