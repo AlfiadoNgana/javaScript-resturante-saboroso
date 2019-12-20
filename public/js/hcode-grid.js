@@ -27,6 +27,10 @@ class HcodeGrid{
             formUpdate: '#modal-update form',
             btnUpdate: '.btn-update',
             btnDelete: '.btn-delete',
+            onUpdateLoad: (form, name, data)=>{
+                let input = form.querySelector('[name='+name+']');
+                if(input) input.value = data[name];
+            }
         }, configs);
         this.initForms();
         this.initButtons();

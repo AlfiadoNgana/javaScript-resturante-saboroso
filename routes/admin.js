@@ -129,10 +129,27 @@ router.delete('/reservations/:id', function(req, res, next){
 
 
 router.get("/users", (req, res, next) => {
-  res.render("admin/users", {
-    menus: req.menus,
+  users.getUsers().then(data=>{
+    res.render("admin/users", {
+      menus: req.menus,
+      data,
+      user: req.session.user
+    });
+  });
+});
+router.post("/users", (req, res, next) => {
+  users.save(req.fields).then(result=>{
+    res.send(results);
+  }).catch(err=>{
+    res.send(err);
+  });
 
-    user: req.session.user
+});
+router.delete("/users/:id", (req, res, next) => {
+  users.delete(req.params.id).then(result=>{
+    res.send(results);
+  }).catch(err=>{
+    res.send(err);
   });
 });
 
