@@ -4,6 +4,7 @@ var express = require('express');
 var router = express.Router();
 var reservations = require('./../inc/reservations');
 var contacts = require('./../inc/contacts');
+var emails = require('./../inc/emails');
 const title = 'Restaurante Saboroso!';
 
 /* GET home page. */
@@ -97,6 +98,20 @@ router.get('/services', function(req, res, next){
     background: 'images/img_bg_1.jpg',
     h1: 'É um prazer poder servir!'
   });
+});
+
+router.post('/subscribe', function(req, res, next){
+  if(!req.fields.email){
+    res.send({
+      error: 'preencha o email.'
+    });
+  }else{
+    emails.save(req.fields).then(results=>{
+      res.send(results);
+    }).catch(err=>{
+      res.send({error: err});
+    });
+  }
 });
 
 module.exports = router;

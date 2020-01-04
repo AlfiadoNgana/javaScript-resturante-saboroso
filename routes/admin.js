@@ -3,6 +3,7 @@ var users = require("./../inc/users");
 var admin = require('./../inc/admin');
 var menus = require('./../inc/menus');
 var contacts = require('./../inc/contacts');
+var emails = require('./../inc/emails');
 var moment = require('moment');
 var reservations = require('./../inc/reservations');
 var router = express.Router();
@@ -180,9 +181,20 @@ router.delete('/contacts/:id', (req, res, next)=>{
   });
 });
 router.get("/emails", (req, res, next) => {
-  res.render("admin/emails", {
-    menus: req.menus,
-    user: req.session.user
+  emails.getEmails().then(data=>{
+    res.render("admin/emails", {
+      menus: req.menus,
+      user: req.session.user,
+      data
+    });
+  });
+});
+
+router.delete('/emails/:id', (req, res, next)=>{
+  emails.delete(req.params.id).then(results=>{
+    res.send(results);
+  }).catch(err=>{
+    res.send(err);
   });
 });
 
