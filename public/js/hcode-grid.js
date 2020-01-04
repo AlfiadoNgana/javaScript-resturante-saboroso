@@ -25,13 +25,14 @@ class HcodeGrid{
         this.options = Object.assign({}, {
             formCreate: '#modal-create form',
             formUpdate: '#modal-update form',
-            btnUpdate: '.btn-update',
-            btnDelete: '.btn-delete',
+            btnUpdate: 'btn-update',
+            btnDelete: 'btn-delete',
             onUpdateLoad: (form, name, data)=>{
                 let input = form.querySelector('[name='+name+']');
                 if(input) input.value = data[name];
             }
         }, configs);
+        this.rows = [...document.querySelectorAll('table tbody tr')];
         this.initForms();
         this.initButtons();
     }
@@ -39,16 +40,22 @@ class HcodeGrid{
     initForms(){
 
         this.formCreate = document.querySelector(this.options.formCreate);
-        this.formCreate.save().then(json=>{
-            this.fireEvents('afterFormCreate');
-        }).catch(err=>{
-            this.fireEvents('afterFormCreateError');
+        this.formCreate.save({
+            success:()=>{
+                this.fireEvents('afterFormCreate');
+            },
+            failure:(err)=>{
+                this.fireEvents('afterFormCreateError');
+            }
         });
         this.formUpdate = document.querySelector(this.options.formUpdate);
-        this.formUpdate.save().then(json=>{
-            this.fireEvents('afterFormUpdate');
-        }).catch(err=>{
-            this.fireEvents('afterFormUpdateError');
+        this.formUpdate.save({
+            success:()=>{
+                this.fireEvents('afterFormUpdate');
+            },
+            failure:(err)=>{
+                this.fireEvents('afterFormUpdateError');
+            }
         });
 
     }
@@ -64,38 +71,44 @@ class HcodeGrid{
         return JSON.parse(tr.dataset.row);
     }
 
+    btnUpdateClick(e){
+        this.fireEvents('beforeUpdateClick', [e]);
+        let data = this.getTrData(e.target);
+        for(let name in data){
+            this.options.onUpdateLoad(this.formUpdate, name, data);
+        }
+        this.fireEvents('afterUpdateClick', [e]);
+    }
+
+    btnDeleteClick(e){
+        let data = this.getTrData(e.target);
+        
+        if(confirm(eval('`'+ this.options.deleteMsg + '`'))){
+        fetch(eval('`'+this.options.deleteUrl+'`'), {
+            method: 'DELETE'
+        })
+            .then(response=>response.json())
+            .then(json=>{
+            this.fireEvents('afterDeleteClick');
+            });
+        }
+    }
+
     initButtons(){
 
-        [...document.querySelectorAll(this.options.btnDelete)].forEach(btn=>{
-            btn.addEventListener('click', e=>{
-              let data = this.getTrData(btn);
-        
-              if(confirm(eval('`'+ this.options.deleteMsg + '`'))){
-                fetch(eval('`'+this.options.deleteUrl+'`'), {
-                  method: 'DELETE'
-                })
-                  .then(response=>response.json())
-                  .then(json=>{
-                    this.fireEvents('afterDeleteClick');
-                  });
-              }
-        
+        this.rows.forEach(row=>{
+            [...row.querySelectorAll('.btn')].forEach(btn=>{
+                btn.addEventListener('click', e=>{
+                    if(e.target.classList.contains(this.options.btnUpdate)){
+                        this.btnUpdateClick(e);
+                    } else if(e.target.classList.contains(this.options.btnDelete)){
+                        this.btnDeleteClick(e);
+                    }else{
+                        this.fireEvents('buttonClick', [e.target, this.getTrData(e.target), e]);
+                    }
+                });
             });
-          });
-        
-          
-        
-          [...document.querySelectorAll(this.options.btnUpdate)].forEach(btn=>{
-             btn.addEventListener('click', e=>{
-                this.fireEvents('beforeUpdateClick', [e]);
-                let data = this.getTrData(btn);
-              for(let name in data){
-                this.options.onUpdateLoad(this.formUpdate, name, data);
-              }
-              this.fireEvents('afterUpdateClick', [e]);
-             });
-          });
-        
+        });      
 
     }
 

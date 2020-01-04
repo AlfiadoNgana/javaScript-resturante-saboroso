@@ -153,6 +153,14 @@ router.delete("/users/:id", (req, res, next) => {
   });
 });
 
+router.post("/users/password-change", (req, res, next)=>{
+  users.changePassword(req).then(result=>{
+    res.send(result);
+  }).catch(err=>{
+    res.send({error: err});
+  });
+});
+
 router.get("/contacts", (req, res, next) => {
   res.render("admin/contacts", {
     menus: req.menus,

@@ -94,5 +94,25 @@ save(fields){
           });
       });
 
+  },
+
+  changePassword(req){
+
+    return new Promise((resolve, reject)=>{
+      if(!req.fields.password) reject('preencha a senha!');
+      else if(req.fields.password !== req.fields.passwordConfirm) reject('as senhas sao diferentes');
+      else{
+        conn.query(`
+          UPDATE tb_users SET password = ? WHERE id = ?
+        `, [
+          req.fields.password,
+          req.fields.id
+        ], (err, results)=>{
+          if(err) reject(err.message);
+          else resolve(results);
+        });
+      }
+    });
+
   }
 };
