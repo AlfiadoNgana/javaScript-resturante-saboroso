@@ -2,6 +2,7 @@ var express = require("express");
 var users = require("./../inc/users");
 var admin = require('./../inc/admin');
 var menus = require('./../inc/menus');
+var contacts = require('./../inc/contacts');
 var moment = require('moment');
 var reservations = require('./../inc/reservations');
 var router = express.Router();
@@ -162,12 +163,22 @@ router.post("/users/password-change", (req, res, next)=>{
 });
 
 router.get("/contacts", (req, res, next) => {
-  res.render("admin/contacts", {
-    menus: req.menus,
-    user: req.session.user
+  contacts.getContacts().then(data=>{
+    res.render("admin/contacts", {
+      menus: req.menus,
+      user: req.session.user,
+      data
+    });
   });
 });
 
+router.delete('/contacts/:id', (req, res, next)=>{
+  contacts.delete(req.params.id).then(results=>{
+    res.send(results);
+  }).catch(err=>{
+    res.send(err);
+  });
+});
 router.get("/emails", (req, res, next) => {
   res.render("admin/emails", {
     menus: req.menus,
