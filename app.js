@@ -7,12 +7,20 @@ var redis = require("redis");
 var session = require("express-session");
 var redisStore = require("connect-redis")(session);
 var formidable = require('formidable');
+var http = require('http');
+var socket = require('socket.io');
 
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 var adminsRouter = require("./routes/admin");
 
 var app = express();
+
+var http = http.Server(app);
+var io = socket(http);
+io.on('connection', function(socket){
+  console.log('novo usuario');
+});
 
 app.use(function(req, res, next){
   if(req.method === 'POST' && req.url !=='/admin/login'){
@@ -49,8 +57,6 @@ app.use(
 );
 
 app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
@@ -78,4 +84,6 @@ app.use(function(err, req, res, next) {
   res.render("error");
 });
 
-module.exports = app;
+http.listen(3000, function(){
+  console.log('servidor em execucao.....');
+});
