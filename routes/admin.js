@@ -101,13 +101,20 @@ router.delete('/menus/:id', function(req, res, next){
 });
 
 router.get("/reservations", (req, res, next) => {
-  reservations.getReservations().then(data=>{
+  let start = (req.query.start)? req.query.start : moment().subtract(1,'year').format('YYYY-MM-DD');
+  let end = (req.query.end)? req.query.end : moment().format('YYYY-MM-DD');
+
+  reservations.getReservations(req).then(pag=>{
     res.render("admin/reservations", {
-      date:{},
+      date:{
+        start,
+        end
+      },
       menus: req.menus,
       user: req.session.user,
-      data,
-      moment
+      data: pag.data,
+      moment,
+      links: pag.links
     });
   });
   
