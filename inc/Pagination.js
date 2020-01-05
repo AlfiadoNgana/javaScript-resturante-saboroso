@@ -63,12 +63,27 @@ class Pagination{
             nrEnd = (this.getCurrentePage() + parseInt(limitPagesNav/2));
         }
 
+        //pagina anterior
+        if(this.getCurrentePage() > 1){
+            links.push({
+                text: '<',
+                href: `?${this.getQueryString(Object.assign({}, params, {page: this.getCurrentePage()-1}))}`
+            })
+        }
+
         for(let x=nrStart; x<=nrEnd; x++){
             links.push({
                 text: x,
                 href: `?${this.getQueryString(Object.assign({}, params, {page: x}))}`,
                 active: (x === this.getCurrentePage())
             });
+        }
+        //proxima pagina
+        if(this.getCurrentePage() < this.getTotalPages()){
+            links.push({
+                text: '>',
+                href: `?${this.getQueryString(Object.assign({}, params, {page: this.getCurrentePage()+1}))}`
+            })
         }
 
         return links;
