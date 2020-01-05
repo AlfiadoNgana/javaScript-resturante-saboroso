@@ -10,9 +10,7 @@ var formidable = require('formidable');
 var http = require('http');
 var socket = require('socket.io');
 
-var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-var adminsRouter = require("./routes/admin");
+
 
 var app = express();
 
@@ -22,13 +20,20 @@ io.on('connection', function(socket){
   console.log('novo usuario');
 });
 
+var indexRouter = require("./routes/index")(io);
+var usersRouter = require("./routes/users");
+var adminsRouter = require("./routes/admin")(io);
+
+
 app.use(function(req, res, next){
+  req.body = {};
   if(req.method === 'POST' && req.url !=='/admin/login'){
     var form = formidable.IncomingForm({
       uploadDir: path.join(__dirname, '/public/images'),
       keepExtensions: true
     });
     form.parse(req, function(err, fields, files){
+      req.body = fields;
       req.fields = fields;
       req.files = files;
 

@@ -1,6 +1,7 @@
 var express = require("express");
 var users = require("./../inc/users");
 var admin = require('./../inc/admin');
+var conn = require('./../inc/db');
 var menus = require('./../inc/menus');
 var contacts = require('./../inc/contacts');
 var emails = require('./../inc/emails');
@@ -8,7 +9,11 @@ var moment = require('moment');
 var reservations = require('./../inc/reservations');
 var router = express.Router();
 
-moment.locale("pt-br");
+
+
+module.exports = function(io){
+
+  moment.locale("pt-br");
 
 router.use((req, res, next) => {
   if (["/login"].indexOf(req.url) === -1 && !req.session.user) {
@@ -39,6 +44,23 @@ router.get("/", (req, res, next) => {
     });
   });
   
+});
+
+router.get('/dashboard', function(req, res, next){
+  conn.query(`
+      SELECT
+          (
+              SELECT COUNT(id) FROM tb_contacts) AS nrContacts,
+          (
+              SELECT COUNT(id) FROM tb_menus) AS nrMenus,
+          (
+              SELECT COUNT(id) FROM tb_reservations) AS nrReservations,
+          (
+              SELECT COUNT(id) FROM tb_users) AS nrUsers
+  `, (err, results)=>{
+      if(err) res.send(err);
+      else res.send(results[0]);
+  });
 });
 
 router.get("/login", (req, res, next) => {
@@ -87,6 +109,7 @@ router.get("/menus", (req, res, next) => {
 router.post('/menus', (req, res, next)=>{
   menus.save(req.fields, req.files).then(results=>{
     res.send(results);
+    io.emit('dashboard updat');
   }).catch(err=>{
 
     res.send(err)});
@@ -95,6 +118,7 @@ router.post('/menus', (req, res, next)=>{
 router.delete('/menus/:id', function(req, res, next){
   menus.delete(req.params.id).then(results=>{
     res.send(results);
+    io.emit('dashboard updat');
   }).catch(err=>{
     res.send(err);
   });
@@ -131,6 +155,7 @@ router.get('/reservations/chart', (req, res, next)=>{
 
 router.post('/reservations', (req, res, next)=>{
   reservations.save(req.fields, req.files).then(results=>{
+    io.emit('dashboard updat');
     res.send(results);
   }).catch(err=>{
 
@@ -139,6 +164,7 @@ router.post('/reservations', (req, res, next)=>{
 
 router.delete('/reservations/:id', function(req, res, next){
   reservations.delete(req.params.id).then(results=>{
+    io.emit('dashboard updat');
     res.send(results);
   }).catch(err=>{
     res.send(err);
@@ -158,6 +184,7 @@ router.get("/users", (req, res, next) => {
 });
 router.post("/users", (req, res, next) => {
   users.save(req.fields).then(result=>{
+    io.emit('dashboard updat');
     res.send(results);
   }).catch(err=>{
     res.send(err);
@@ -166,6 +193,7 @@ router.post("/users", (req, res, next) => {
 });
 router.delete("/users/:id", (req, res, next) => {
   users.delete(req.params.id).then(result=>{
+    io.emit('dashboard updat');
     res.send(results);
   }).catch(err=>{
     res.send(err);
@@ -193,6 +221,7 @@ router.get("/contacts", (req, res, next) => {
 router.delete('/contacts/:id', (req, res, next)=>{
   contacts.delete(req.params.id).then(results=>{
     res.send(results);
+    io.emit('dashboard updat');
   }).catch(err=>{
     res.send(err);
   });
@@ -210,9 +239,13 @@ router.get("/emails", (req, res, next) => {
 router.delete('/emails/:id', (req, res, next)=>{
   emails.delete(req.params.id).then(results=>{
     res.send(results);
+    io.emit('dashboard updat');
   }).catch(err=>{
     res.send(err);
   });
 });
+  
 
-module.exports = router;
+  return router;
+
+};

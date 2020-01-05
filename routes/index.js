@@ -7,7 +7,11 @@ var contacts = require('./../inc/contacts');
 var emails = require('./../inc/emails');
 const title = 'Restaurante Saboroso!';
 
-/* GET home page. */
+
+
+module.exports = function(io){
+
+  /* GET home page. */
 router.get('/', function(req, res, next) {
 
   menus.getMenus().then(results =>{
@@ -36,6 +40,7 @@ router.post('/contacts', function(req, res, next){
   if(error.length<=0){
     contacts.save(req.body).then(results=>{
       req.body = {};
+      io.emit('dashboard updat');
       contacts.render(req, res, [], 'Contacto Registado com sucesso');
     }).catch(err=>{
       contacts.render(req, res, err);
@@ -84,6 +89,7 @@ router.post('/reservations', function(req, res, next){
   }else{
     reservations.save(req.body).then(results=>{
       req.body = {};
+      io.emit('dashboard updat');
       reservations.render(req, res, [], "Reserva feita com sucesso");
     }).catch(err=>{
       reservations.render(req, res, err);
@@ -114,4 +120,5 @@ router.post('/subscribe', function(req, res, next){
   }
 });
 
-module.exports = router;
+  return router;
+};
